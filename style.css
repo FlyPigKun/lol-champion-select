@@ -76,6 +76,22 @@ body {
 .brand-icon { font-size: 24px; color: var(--gold); }
 .brand-text { font-size: 16px; color: var(--gold); letter-spacing: 3px; font-weight: bold; }
 .top-hint { font-size: 12px; color: var(--gold-dark); letter-spacing: 1px; }
+.top-nav { display: flex; gap: 4px; }
+.nav-link {
+    padding: 6px 16px;
+    color: var(--gold-dark);
+    text-decoration: none;
+    font-size: 13px;
+    letter-spacing: 1px;
+    border: 1px solid transparent;
+    transition: all 0.2s;
+}
+.nav-link:hover { color: var(--gold); border-color: rgba(200,170,110,0.3); }
+.nav-link.active {
+    color: var(--gold);
+    border-color: var(--gold-dark);
+    background: rgba(200,170,110,0.08);
+}
 
 /* ===================== 通用 ===================== */
 .section-title {

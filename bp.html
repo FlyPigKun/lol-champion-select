@@ -1,0 +1,84 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>LOL BP 助手 - 智能 Ban/Pick 推荐</title>
+    <link rel="stylesheet" href="style.css">
+    <link rel="stylesheet" href="bp.css">
+</head>
+<body>
+
+<!-- 主页面 -->
+<div id="app" class="app">
+    <header class="top-bar">
+        <div class="brand">
+            <span class="brand-icon">&#9876;</span>
+            <span class="brand-text">CHAMPION SELECT</span>
+        </div>
+        <nav class="top-nav">
+            <a href="index.html" class="nav-link">随机组队</a>
+            <a href="bp.html" class="nav-link active">BP 助手</a>
+        </nav>
+    </header>
+
+    <!-- 分路选择 -->
+    <section class="bp-lane-section">
+        <h2 class="section-title">选择你的分路</h2>
+        <div class="bp-lane-bar" id="bp-lane-bar"></div>
+    </section>
+
+    <!-- BP 主面板 -->
+    <section class="bp-main">
+        <div class="bp-columns">
+            <!-- 左侧：己方 -->
+            <div class="bp-side bp-ally">
+                <h3 class="bp-side-title ally-title">己方阵容</h3>
+                <div class="bp-picks" id="ally-picks"></div>
+            </div>
+
+            <!-- 中间：Ban 区 + 推荐 -->
+            <div class="bp-center">
+                <div class="bp-ban-section">
+                    <h3 class="bp-side-title">Ban 位</h3>
+                    <div class="bp-bans" id="bp-bans"></div>
+                </div>
+                <div class="bp-recommend-section">
+                    <h3 class="bp-side-title">推荐 Ban</h3>
+                    <div class="bp-ban-recs" id="bp-ban-recs"></div>
+                </div>
+            </div>
+
+            <!-- 右侧：敌方 -->
+            <div class="bp-side bp-enemy">
+                <h3 class="bp-side-title enemy-title">敌方阵容</h3>
+                <div class="bp-picks" id="enemy-picks"></div>
+            </div>
+        </div>
+    </section>
+
+    <!-- 推荐英雄 -->
+    <section class="bp-recommendations" id="bp-recommendations" style="display:none">
+        <h2 class="section-title">推荐选择 <span class="rec-lane-label" id="rec-lane-label"></span></h2>
+        <div class="bp-rec-cards" id="bp-rec-cards"></div>
+    </section>
+
+    <!-- 英雄选择器弹窗 -->
+    <div class="champ-picker-overlay" id="champ-picker" style="display:none">
+        <div class="champ-picker-panel">
+            <div class="picker-header">
+                <h3 class="picker-title" id="picker-title">选择英雄</h3>
+                <input type="text" class="picker-search" id="picker-search" placeholder="搜索英雄..." oninput="filterPicker()">
+                <button class="picker-close" onclick="closePicker()">&times;</button>
+            </div>
+            <div class="picker-lane-filter" id="picker-lane-filter"></div>
+            <div class="picker-grid" id="picker-grid"></div>
+        </div>
+    </div>
+</div>
+
+<script src="champions.js"></script>
+<script src="meta.js"></script>
+<script src="bp.js"></script>
+</body>
+</html>
