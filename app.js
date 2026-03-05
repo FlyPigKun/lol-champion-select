@@ -90,40 +90,54 @@ function rollTeam() {
         if (!p.name.trim()) p.name = '玩家' + (i + 1);
     });
 
-    // 没选分路的随机分配未被选的分路
-    const takenLanes = players.filter(p => p.lane).map(p => p.lane);
-    const freeLanes = lanes.map(l => l.id).filter(l => !takenLanes.includes(l));
+    // 每次 roll 都重新随机分路（未手动选择的玩家）
+    // 先收集手动选了分路的
+    const manualLanes = players.filter(p => p.lane).map(p => p.lane);
+    const availableLanes = lanes.map(l => l.id).filter(l => !manualLanes.includes(l));
+    // 打乱可用分路
+    for (let i = availableLanes.length - 1; i > 0; i--) {
+        const j = Math.floor(Math.random() * (i + 1));
+        [availableLanes[i], availableLanes[j]] = [availableLanes[j], availableLanes[i]];
+    }
+    // 给未选分路的玩家分配
+    const rollLanes = {};
     players.forEach(p => {
-        if (!p.lane && freeLanes.length > 0) {
-            const idx = Math.floor(Math.random() * freeLanes.length);
-            p.lane = freeLanes.splice(idx, 1)[0];
-        }
-        if (!p.lane) {
-            p.lane = lanes[Math.floor(Math.random() * lanes.length)].id;
+        if (p.lane) {
+            rollLanes[p.id] = p.lane;
+        } else if (availableLanes.length > 0) {
+            rollLanes[p.id] = availableLanes.shift();
+        } else {
+            // 超过5人或全满，随机一个
+            rollLanes[p.id] = lanes[Math.floor(Math.random() * lanes.length)].id;
         }
     });
 
-    // 为每个玩家根据分路抽英雄（使用 OPGG 分路数据匹配）
+    // 为每个玩家根据分路抽英雄（严格按 lanes 字段匹配）
     const usedChampions = new Set();
     const results = players.map(p => {
-        const lane = lanes.find(l => l.id === p.lane);
-        // 优先：该英雄的 lanes 数组第一个就是这个分路（主要位置）
+        const laneId = rollLanes[p.id];
+        const lane = lanes.find(l => l.id === laneId);
+
+        // 构建英雄池：只看 lanes 字段，不看 roles
+        // 主位置池（lanes[0] 就是这个分路的英雄）
         let pool = champions.filter(c =>
-            c.lanes[0] === p.lane && !usedChampions.has(c.id)
+            c.lanes[0] === laneId && !usedChampions.has(c.id)
         );
-        // 次选：该英雄的 lanes 包含这个分路（副位置）
-        if (pool.length === 0) {
-            pool = champions.filter(c =>
-                c.lanes.includes(p.lane) && !usedChampions.has(c.id)
+        // 扩展：lanes 包含这个分路的英雄（含副位）
+        if (pool.length < 3) {
+            const secondary = champions.filter(c =>
+                c.lanes.includes(laneId) && !usedChampions.has(c.id) &&
+                !pool.some(p => p.id === c.id)
             );
+            pool = pool.concat(secondary);
         }
-        // 兜底：全部未选的
+        // 兜底
         if (pool.length === 0) {
             pool = champions.filter(c => !usedChampions.has(c.id));
         }
         const champ = pool[Math.floor(Math.random() * pool.length)];
         usedChampions.add(champ.id);
-        return { player: p, lane, champion: champ };
+        return { player: p, lane, champion: champ, rolledLane: laneId };
     });
 
     showResults(results);
