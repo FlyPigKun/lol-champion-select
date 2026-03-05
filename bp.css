@@ -263,6 +263,55 @@
 }
 .enemy-select-btn:hover { background: rgba(232,64,87,0.2); }
 
+/* 分路选择按钮组 */
+.lane-choose-hint {
+    font-size: 13px;
+    color: var(--gold-dark);
+    margin-bottom: 8px;
+    letter-spacing: 1px;
+}
+.lane-choose-bar { display: flex; gap: 6px; flex-wrap: wrap; justify-content: center; }
+.lane-choose-btn {
+    padding: 8px 18px;
+    background: rgba(10,200,185,0.06);
+    border: 1px solid rgba(10,200,185,0.3);
+    color: var(--teal);
+    font-size: 13px;
+    cursor: pointer;
+    transition: all 0.2s;
+    display: flex; align-items: center; gap: 4px;
+}
+.lane-choose-btn:hover { background: rgba(10,200,185,0.15); transform: scale(1.05); }
+
+.step-lane-tag {
+    display: inline-block;
+    padding: 2px 8px;
+    background: rgba(200,170,110,0.1);
+    border: 1px solid var(--gold-dark);
+    color: var(--gold);
+    font-size: 12px;
+    margin-left: 6px;
+}
+.change-lane-btn {
+    margin-left: 8px;
+    padding: 6px 16px;
+    background: transparent;
+    border: 1px solid rgba(200,170,110,0.3);
+    color: var(--gold-dark);
+    font-size: 12px;
+    cursor: pointer;
+    transition: all 0.2s;
+}
+.change-lane-btn:hover { border-color: var(--gold); color: var(--gold); }
+
+.pick-lane-tag {
+    font-size: 11px;
+    color: var(--gold-dark);
+    letter-spacing: 1px;
+    white-space: nowrap;
+    min-width: 50px;
+}
+
 /* 推荐区 */
 .rec-section {
     width: 100%;
@@ -286,6 +335,7 @@
     cursor: pointer;
     transition: all 0.2s;
     font-size: 13px;
+    position: relative;
 }
 .rec-item:hover { border-color: var(--gold); background: rgba(200,170,110,0.05); }
 .rec-item img {
@@ -295,18 +345,39 @@
     border: 1px solid var(--gold-dark);
 }
 .rec-name { color: var(--gold-light); font-weight: bold; }
-.rec-tier { font-weight: bold; font-size: 12px; margin-left: auto; }
+.rec-tier { font-weight: bold; font-size: 12px; margin-left: auto; flex-shrink: 0; }
 .rec-pick-item { flex-wrap: wrap; }
 .rec-detail { flex: 1; min-width: 0; }
 .rec-score { font-size: 11px; color: var(--teal); margin-left: 8px; }
 .rec-tags { display: flex; gap: 3px; flex-wrap: wrap; margin-top: 2px; }
-.rec-reason {
-    font-size: 10px;
-    color: #8899aa;
-    margin-top: 2px;
-    line-height: 1.5;
-    word-break: break-all;
+
+/* Tooltip 推荐理由 */
+.rec-tooltip {
+    display: none;
+    position: absolute;
+    left: 0; right: 0;
+    bottom: 100%;
+    margin-bottom: 4px;
+    padding: 10px 12px;
+    background: rgba(5,16,26,0.97);
+    border: 1px solid var(--gold-dark);
+    box-shadow: 0 4px 20px rgba(0,0,0,0.6);
+    z-index: 50;
+    font-size: 12px;
+    line-height: 1.8;
+    color: var(--gold-light);
 }
+.rec-item:hover .rec-tooltip { display: block; }
+.tooltip-row {
+    display: flex;
+    align-items: center;
+    gap: 6px;
+}
+.tooltip-row .tooltip-icon { flex-shrink: 0; font-size: 10px; }
+.tooltip-icon.up { color: #4caf50; }
+.tooltip-icon.down { color: var(--red); }
+.tooltip-icon.info { color: var(--gold); }
+
 .rec-hint { font-size: 12px; color: var(--gold-dark); text-align: center; padding: 12px; letter-spacing: 1px; }
 
 .ctag {
@@ -329,8 +400,12 @@
     border-bottom: 1px solid var(--border);
     flex-wrap: wrap;
 }
+.final-lane { font-size: 12px; color: var(--gold-dark); min-width: 48px; }
 .final-champ { color: var(--gold); font-weight: bold; font-size: 13px; min-width: 60px; }
-.final-tags { display: flex; gap: 3px; flex-wrap: wrap; }
+.final-tier { font-weight: bold; font-size: 12px; }
+.final-vs { color: var(--gold-dark); font-size: 11px; }
+.final-enemy { color: #f06070; font-size: 13px; font-weight: bold; }
+.final-tags { display: flex; gap: 3px; flex-wrap: wrap; width: 100%; margin-top: 4px; }
 
 /* 底部控制 */
 .bp-bottom-bar {
