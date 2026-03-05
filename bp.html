@@ -3,13 +3,12 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>LOL BP 助手 - 智能 Ban/Pick 推荐</title>
+    <title>LOL BP 助手 - 模拟 Ban/Pick</title>
     <link rel="stylesheet" href="style.css">
     <link rel="stylesheet" href="bp.css">
 </head>
 <body>
 
-<!-- 主页面 -->
 <div id="app" class="app">
     <header class="top-bar">
         <div class="brand">
@@ -22,45 +21,69 @@
         </nav>
     </header>
 
-    <!-- 分路选择 -->
-    <section class="bp-lane-section">
-        <h2 class="section-title">选择你的分路</h2>
-        <div class="bp-lane-bar" id="bp-lane-bar"></div>
-    </section>
-
-    <!-- BP 主面板 -->
-    <section class="bp-main">
-        <div class="bp-columns">
-            <!-- 左侧：己方 -->
-            <div class="bp-side bp-ally">
-                <h3 class="bp-side-title ally-title">己方阵容</h3>
-                <div class="bp-picks" id="ally-picks"></div>
+    <!-- 设置面板（选边 + 分路） -->
+    <section class="bp-setup" id="bp-setup">
+        <h2 class="section-title">BP 模拟设置</h2>
+        <div class="setup-row">
+            <span class="setup-label">你是哪一边？</span>
+            <div class="side-btns">
+                <button class="side-btn blue-side active" onclick="setSide('blue')">
+                    <span class="side-icon">&#9650;</span> 蓝色方（先选）
+                </button>
+                <button class="side-btn red-side" onclick="setSide('red')">
+                    <span class="side-icon">&#9660;</span> 红色方（后选）
+                </button>
             </div>
-
-            <!-- 中间：Ban 区 + 推荐 -->
-            <div class="bp-center">
-                <div class="bp-ban-section">
-                    <h3 class="bp-side-title">Ban 位</h3>
-                    <div class="bp-bans" id="bp-bans"></div>
-                </div>
-                <div class="bp-recommend-section">
-                    <h3 class="bp-side-title">推荐 Ban</h3>
-                    <div class="bp-ban-recs" id="bp-ban-recs"></div>
-                </div>
-            </div>
-
-            <!-- 右侧：敌方 -->
-            <div class="bp-side bp-enemy">
-                <h3 class="bp-side-title enemy-title">敌方阵容</h3>
-                <div class="bp-picks" id="enemy-picks"></div>
-            </div>
+        </div>
+        <div class="setup-row">
+            <span class="setup-label">你的分路</span>
+            <div class="setup-lanes" id="setup-lanes"></div>
+        </div>
+        <div class="setup-row">
+            <button class="start-bp-btn" onclick="startBP()">开始 BP</button>
         </div>
     </section>
 
-    <!-- 推荐英雄 -->
-    <section class="bp-recommendations" id="bp-recommendations" style="display:none">
-        <h2 class="section-title">推荐选择 <span class="rec-lane-label" id="rec-lane-label"></span></h2>
-        <div class="bp-rec-cards" id="bp-rec-cards"></div>
+    <!-- BP 流程面板 -->
+    <section class="bp-flow" id="bp-flow" style="display:none">
+        <!-- 顶部 Ban 区 -->
+        <div class="bp-ban-bar">
+            <div class="ban-group blue-bans" id="blue-bans"></div>
+            <div class="ban-divider">BAN</div>
+            <div class="ban-group red-bans" id="red-bans"></div>
+        </div>
+
+        <!-- 中间选人区 -->
+        <div class="bp-pick-area">
+            <div class="pick-column blue-column">
+                <h3 class="col-title blue-title">蓝色方</h3>
+                <div class="pick-list" id="blue-picks"></div>
+            </div>
+            <div class="pick-center">
+                <div class="phase-info" id="phase-info">Ban 阶段</div>
+                <div class="step-info" id="step-info"></div>
+                <div class="step-actions" id="step-actions"></div>
+                <!-- 推荐区 -->
+                <div class="rec-section" id="rec-section" style="display:none">
+                    <h4 class="rec-title">推荐选择</h4>
+                    <div class="rec-list" id="rec-list"></div>
+                </div>
+                <div class="rec-section" id="ban-rec-section" style="display:none">
+                    <h4 class="rec-title">推荐 Ban</h4>
+                    <div class="rec-list" id="ban-rec-list"></div>
+                </div>
+            </div>
+            <div class="pick-column red-column">
+                <h3 class="col-title red-title">红色方</h3>
+                <div class="pick-list" id="red-picks"></div>
+            </div>
+        </div>
+
+        <!-- 底部操作 -->
+        <div class="bp-bottom-bar">
+            <button class="bp-ctrl-btn" onclick="undoStep()">&#8592; 撤销</button>
+            <button class="bp-ctrl-btn" onclick="resetBP()">重置 BP</button>
+        </div>
     </section>
 
     <!-- 英雄选择器弹窗 -->
