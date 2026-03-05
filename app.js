@@ -1,10 +1,10 @@
 // ===== 分路定义 =====
 const lanes = [
-    { id: 'top', name: '上单', icon: '&#9650;', roles: ['fighter','tank'] },
-    { id: 'jungle', name: '打野', icon: '&#9733;', roles: ['fighter','assassin','tank'] },
-    { id: 'mid', name: '中单', icon: '&#9830;', roles: ['mage','assassin'] },
-    { id: 'adc', name: '下路', icon: '&#9654;', roles: ['marksman'] },
-    { id: 'support', name: '辅助', icon: '&#9829;', roles: ['support','tank'] },
+    { id: 'top', name: '上单', icon: '&#9650;' },
+    { id: 'jungle', name: '打野', icon: '&#9733;' },
+    { id: 'mid', name: '中单', icon: '&#9830;' },
+    { id: 'adc', name: '下路', icon: '&#9654;' },
+    { id: 'support', name: '辅助', icon: '&#9829;' },
 ];
 
 // ===== 状态 =====
@@ -103,15 +103,21 @@ function rollTeam() {
         }
     });
 
-    // 为每个玩家根据分路抽英雄
+    // 为每个玩家根据分路抽英雄（使用 OPGG 分路数据匹配）
     const usedChampions = new Set();
     const results = players.map(p => {
         const lane = lanes.find(l => l.id === p.lane);
-        // 找匹配分路的英雄
+        // 优先：该英雄的 lanes 数组第一个就是这个分路（主要位置）
         let pool = champions.filter(c =>
-            c.roles.some(r => lane.roles.includes(r)) && !usedChampions.has(c.id)
+            c.lanes[0] === p.lane && !usedChampions.has(c.id)
         );
-        // 如果池子空了就用全部未选的
+        // 次选：该英雄的 lanes 包含这个分路（副位置）
+        if (pool.length === 0) {
+            pool = champions.filter(c =>
+                c.lanes.includes(p.lane) && !usedChampions.has(c.id)
+            );
+        }
+        // 兜底：全部未选的
         if (pool.length === 0) {
             pool = champions.filter(c => !usedChampions.has(c.id));
         }
